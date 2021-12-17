@@ -1,0 +1,34 @@
+:root {
+    --black: #030d1a;
+    --white: #fbfbfb;
+    --var1: #184989;
+    --var2: #1262a7;
+    --var3: #0c7ac4;
+    --var4: #00aaff;
+
+    --yellow: rgb(209, 167, 29);
+    --red: rgb(180, 34, 34);
+    --grey: rgb(80, 80, 80);
+
+    --hover-blue: #18498998;
+}
+@font-face {
+    font-family: "SourceSans3";
+    src: local("SourceSans3"), url(./fonts/SourceSans3-Regular.ttf) format("opentype");
+}
+
+body {
+    max-width: 100vw;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    background: var(--var1);
+    font-family: "SourceSans3";
+    color: var(--black);
+}
+
+@media screen and (max-width: 920px) {
+    .data-table {
+        width: 100% !important;
+    }
+}
