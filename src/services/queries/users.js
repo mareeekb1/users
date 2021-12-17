@@ -79,6 +79,17 @@ const getUserByID = `
     }
   }
 `;
+const getAllUsers = `
+  query GetAllUsers {
+    user {
+      email
+      id
+      role
+      username
+      is_premium
+    }
+  }
+`;
 
 export const query = {
   getAllForTable: getAllUsersToTable,
@@ -93,7 +104,8 @@ export const service = {
   deleteUserByIdS,
   registerUserS,
   loginS,
-  getUserByIDs
+  getUserByIDs,
+  getAllUsersS
 }
 
 
@@ -222,3 +234,26 @@ async function getUserByIDs(id) {
   console.log(data);
   return data
 }
+
+
+function fetchGetAllUsers() {
+  return fetchGraphQL(
+    getAllUsers,
+    "GetAllUsers",
+    {}
+  );
+}
+
+async function getAllUsersS() {
+  const { errors, data } = await fetchGetAllUsers();
+
+  if (errors) {
+    // handle those errors like a pro
+    console.error(errors);
+    console.log(errors)
+  }
+
+  // do something great with this precious data
+  return data
+}
+

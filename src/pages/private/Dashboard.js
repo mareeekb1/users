@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from 'urql';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 
 import { DataGrid } from '@mui/x-data-grid';
@@ -20,7 +19,6 @@ import Modal from '../../components/general/Modal';
 
 const Dashboard = () => {
     const nav = useNavigate()
-    const params = useParams();
     const dispatch = useDispatch()
     const [deleteModal, setDeleteModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -81,20 +79,18 @@ const Dashboard = () => {
             ),
         },
     ];
-    const [{ fetching, data }, reexecuteQuery] = useQuery({
-        query: query.getAllForTable,
-    });
-    const refresh = () => {
-        reexecuteQuery({ requestPolicy: "network-only" });
-    };
 
     useEffect(() => {
-        if (data?.user) {
-            setList(data.user)
+        async function fetch() {
+            setIsLoading(true)
+            const result = await service.getAllUsersS()
+            if (result?.user) {
+                setList(result.user)
+            }
+            setIsLoading(false)
         }
-        refresh()
-        // eslint-disable-next-line
-    }, [params.id, data?.user]);
+        fetch()
+    }, []);
 
     async function handleDeleteUser(id) {
         setIsLoading(true)
@@ -120,11 +116,11 @@ const Dashboard = () => {
             <Grow in timeout={500} style={{ transformOrigin: '0 0 0' }} >
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography sx={{ fontSize: 36, color: 'var(--white)', fontWeight: 'bold', margin: "2rem" }}>List of users</Typography>
-                    {fetching ?
-                        <Skeleton animation="wave" sx={{ height: data?.user.length < 5 ? (200 + (data?.user.length * 40)) : 420, width: '66%', borderRadius: 1 }} />
-                        : <div style={{ height: data?.user.length < 5 ? (200 + (data?.user.length * 40)) : 420, width: '66%', borderRadius: 1 }} className="data-table">
+                    {isLoading ?
+                        <Skeleton animation="wave" sx={{ height: list.length < 5 ? (200 + (list.length * 40)) : 420, width: '66%', borderRadius: 1 }} />
+                        : <div style={{ height: list.length < 5 ? (200 + (list.length * 40)) : 420, width: '66%', borderRadius: 1 }} className="data-table">
                             <DataGrid
-                                loading={fetching || isLoading}
+                                loading={isLoading}
                                 sx={{ borderRadius: 1, background: 'var(--white)', width: 'auto', p: '1rem' }}
                                 rows={list}
                                 columns={columns}
