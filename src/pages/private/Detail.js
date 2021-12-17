@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { styled } from '@mui/material/styles';
 import { Box, Grow, Typography, Paper, Grid, ButtonGroup, Button, IconButton, Skeleton, Fade } from '@mui/material'
 import Modal from '../../components/general/Modal';
@@ -20,15 +20,20 @@ import Edit from '@mui/icons-material/Edit';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import StarIcon from '@mui/icons-material/Star';
 import DeleteUserForm from '../../components/forms/DeleteUserForm';
+import Logout from '@mui/icons-material/Logout';
+
 
 import { routes } from '../../services/routes/routes';
 import { service } from '../../services/queries/users';
 import { getYearsFromBirthDate, reformatDate } from '../../services/helpers';
+import { logoutUser } from '../../services/redux/actions'
+
 
 
 const Detail = () => {
     const nav = useNavigate()
     const params = useParams();
+    const dispatch = useDispatch()
     const user_selector = useSelector(state => state.user)
     const [isLoading, setIsLoading] = useState(true)
     const [modal, setModal] = useState(false)
@@ -97,9 +102,19 @@ const Detail = () => {
         }
         setIsLoading(false)
     }
+    function handleLogout() {
+        dispatch(logoutUser())
+        nav(routes.LOGIN)
+    }
 
     return (
         <Box sx={{ maxHeight: '100%' }}>
+            <Logout sx={{
+                position: 'absolute', top: "2rem", right: '2rem', color: "var(--white)", zIndex: 10, cursor: 'pointer', p: "0.3rem", "&:hover": {
+                    color: 'var(--var4)', boxShadow: '2px 2px 20px -5px var(--black)', borderRadius: 50,
+                }
+            }}
+                onClick={() => handleLogout()} />
             {!isLoading &&
                 <>
                     <Modal
