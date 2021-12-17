@@ -12,7 +12,7 @@ import Logout from '@mui/icons-material/Logout';
 
 
 import { routes } from '../../services/routes/routes';
-import { query, service } from '../../services/queries/users';
+import { service } from '../../services/queries/users';
 import { logoutUser } from '../../services/redux/actions'
 import Modal from '../../components/general/Modal';
 
