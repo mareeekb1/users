@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography, Grow, IconButton, Skeleton } from '@mui/material';
@@ -9,16 +9,19 @@ import StarIcon from '@mui/icons-material/Star';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteUserForm from '../../components/forms/DeleteUserForm';
+import Logout from '@mui/icons-material/Logout';
 
 
 import { routes } from '../../services/routes/routes';
 import { query, service } from '../../services/queries/users';
+import { logoutUser } from '../../services/redux/actions'
 import Modal from '../../components/general/Modal';
 
 
 const Dashboard = () => {
     const nav = useNavigate()
     const params = useParams();
+    const dispatch = useDispatch()
     const [deleteModal, setDeleteModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [list, setList] = useState([])
@@ -101,28 +104,40 @@ const Dashboard = () => {
         }
         setIsLoading(false)
     }
+    function handleLogout() {
+        dispatch(logoutUser())
+        nav(routes.LOGIN)
+    }
 
     return (
-        <Grow in timeout={500} style={{ transformOrigin: '0 0 0' }} >
-            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: 36, color: 'var(--white)', fontWeight: 'bold', margin: "2rem" }}>List of users</Typography>
-                {fetching ?
-                    <Skeleton animation="wave" sx={{ height: data?.user.length < 5 ? (200 + (data?.user.length * 40)) : 420, width: '66%', borderRadius: 1 }} />
-                    : <div style={{ height: data?.user.length < 5 ? (200 + (data?.user.length * 40)) : 420, width: '66%', borderRadius: 1 }} className="data-table">
-                        <DataGrid
-                            loading={fetching || isLoading}
-                            sx={{ borderRadius: 1, background: 'var(--white)', width: 'auto', p: '1rem' }}
-                            rows={list}
-                            columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            checkboxSelection
-                            disableSelectionOnClick
-                        />
-                    </div>
+        <Box>
+            <Logout sx={{
+                position: 'absolute', top: "2rem", right: '2rem', color: "var(--white)", zIndex: 10, cursor: 'pointer', p: "0.3rem", "&:hover": {
+                    color: 'var(--var4)', boxShadow: '2px 2px 20px -5px var(--black)', borderRadius: 50,
                 }
-            </Box>
-        </Grow>
+            }}
+                onClick={() => handleLogout()} />
+            <Grow in timeout={500} style={{ transformOrigin: '0 0 0' }} >
+                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography sx={{ fontSize: 36, color: 'var(--white)', fontWeight: 'bold', margin: "2rem" }}>List of users</Typography>
+                    {fetching ?
+                        <Skeleton animation="wave" sx={{ height: data?.user.length < 5 ? (200 + (data?.user.length * 40)) : 420, width: '66%', borderRadius: 1 }} />
+                        : <div style={{ height: data?.user.length < 5 ? (200 + (data?.user.length * 40)) : 420, width: '66%', borderRadius: 1 }} className="data-table">
+                            <DataGrid
+                                loading={fetching || isLoading}
+                                sx={{ borderRadius: 1, background: 'var(--white)', width: 'auto', p: '1rem' }}
+                                rows={list}
+                                columns={columns}
+                                pageSize={5}
+                                rowsPerPageOptions={[5]}
+                                checkboxSelection
+                                disableSelectionOnClick
+                            />
+                        </div>
+                    }
+                </Box>
+            </Grow>
+        </Box>
     );
 };
 export default Dashboard;

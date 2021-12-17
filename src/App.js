@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from "react-router-dom";
-import { useSelector } from "react-redux"
+// import { useSelector } from "react-redux"
 
 import './styles/styles.css'
 
@@ -13,12 +13,13 @@ import Login from './pages/public/Login';
 import Register from './pages/public/Register';
 import Detail from './pages/private/Detail';
 import Dashboard from './pages/private/Dashboard';
+// import PublicRoute from './components/routes/PublicRoute';
 
 export const token = "WqQ28sQlYGIRccH2sSAGKBFOViqYELNJhOsc3SLb7AzJbvUT0V0teVnP8L4bWuJQ";
 
 function App() {
-  const user = useSelector((state) => state.user)
-  console.log(user)
+  // const user = useSelector((state) => state.user)
+
   return (
 
     <Container fixed sx={{ height: '100vh' }}>
@@ -27,12 +28,10 @@ function App() {
         <Route exact path={routes.LOGIN} element={<Login />} />
         <Route exact path={routes.REGISTER} element={<Register />} />
         <Route path={"*"} element={<Error />} />
-        {user &&
-          <Route>
-            <Route exact path={routes.DASHBOARD} element={<Dashboard />} />
-            <Route exact path={routes.DETAIL + ":id"} element={<Detail />} />
-          </Route>
-        }
+        <Route>
+          <Route exact path={routes.DASHBOARD} element={<Dashboard />} />
+          <Route exact path={routes.DETAIL + ":id"} element={<Detail />} />
+        </Route>
       </Routes>
     </Container>
 
